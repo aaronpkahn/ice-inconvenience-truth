@@ -18,6 +18,29 @@
   font-size: large;
 }
 
+.App-calendar {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.react-calendar-heatmap .color-scale-1 { fill: #3399ff; }
+.react-calendar-heatmap .color-scale-2 { fill: #44aaff; }
+.react-calendar-heatmap .color-scale-3 { fill: #55bbff; }
+.react-calendar-heatmap .color-scale-4 { fill: #66ccff; }
+.react-calendar-heatmap .color-scale-5 { fill: #66ccff; }
+.react-calendar-heatmap .color-scale-6 { fill: #77ddff; }
+.react-calendar-heatmap .color-scale-7 { fill: #ffbabf; }
+.react-calendar-heatmap .color-scale-8 { fill: #fe989e; }
+.react-calendar-heatmap .color-scale-9 { fill: #fc767c; }
+.react-calendar-heatmap .color-scale-10 { fill: #e82127; }
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
