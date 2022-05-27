@@ -9,6 +9,7 @@ export default class Slider extends Component {
           <strong>{header}</strong>
         </label>
         <select onChange={this.props.onChange}>
+          <option value="10">10</option>
           <option value="20">20</option>
           <option value="30" selected>30</option>
           <option value="40">40</option>
