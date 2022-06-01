@@ -1,11 +1,66 @@
 import React, { Component } from 'react';
 //import CalendarHeatmap from 'react-calendar-heatmap';
 import Slider from './slider'
-// import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 //import 'react-calendar-heatmap/dist/styles.css';
 // import logo from './logo.svg';
 import './App.css';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Line Chart',
+    },
+  },
+};
+
+const chartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+export const chartData = {
+  labels: chartLabels,
+  datasets: [
+    {
+      label: 'Dataset 1',
+      data: chartLabels.map(() => Math.floor(Math.random()*1000)),
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    },
+    {
+      label: 'Dataset 2',
+      data: chartLabels.map(() => Math.floor(Math.random()*1000)),
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+    },
+  ],
+};
+
+const CHARTY = chartData;
 
 const START_DATE = '2017-12-31';
 const END_DATE = '2018-12-30';
@@ -102,6 +157,7 @@ class App extends Component {
           <Slider header="Miles Per Weekday" onChange={this.changeMilesPerWeekday} />
         </div>
         <div>
+          <Line options={chartOptions} data={chartData} />
           {/* <LineChart width={600} height={300} data={lineData}>
             <Line type="monotone" dataKey="uv" stroke="#8884d8" />
             <CartesianGrid stroke="#ccc" />
@@ -150,6 +206,12 @@ class App extends Component {
               }}
             /> */}
           </div>
+        </div>
+        <div>
+          HERE:
+          <pre>
+            {JSON.stringify(CHARTY, null, 2)}
+          </pre>
         </div>
       </div>
     );
