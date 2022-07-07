@@ -73,45 +73,63 @@ const DEFAULT_MIN_ICE_RANGE = 35;
 const lineData = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}, {name: 'Page B', uv: 400, pv: 2400, amt: 2400}];
 
 class App extends Component {
+
   constructor(props){
     super(props);
     this.state = this.calcState(DEFAULT_MILES_PER_DAY_WEEKDAY);
-    this.changeMilesPerWeekday = this.changeMilesPerWeekday.bind(this);
   }
 
   calcMinDistances(distDays, scaleDenominator, range, refuelThreshold) {
-    var date = new Date(START_DATE);
+    let date = new Date(START_DATE);
     date.setDate(date.getDate() + 1);
-    var values = []
-    var dayCount = distDays.length;
+    let values = []
 
-    var currentRange = range;
-    for(var i=0; i < dayCount; i++){
-      var scale = 10;
-      currentRange -= distDays[i];
-      // We set this to the min range to show the vehicle doesn't go below the min range
-      currentRange = Math.max(0, currentRange)
-      scale = Math.max(0,Math.floor(10*currentRange/scaleDenominator))
-      values.push({ date: new Date(date.getTime()), dist: distDays[i], minRange: currentRange, scale: scale })
+    let currentRange = range;
 
-      if(currentRange < refuelThreshold) {
+    for( let dist of distDays ) {
+      let scale = 10;
+      currentRange -= dist;
+      scale = Math.max(0,Math.floor(10*currentRange/scaleDenominator));
+
+      values.push({ 
+        scale, 
+        dist, 
+        minRange: currentRange, 
+        date: new Date(date.getTime()) 
+      });
+
+      if (currentRange < refuelThreshold) {
         currentRange = range;
       }
+
       date.setDate(date.getDate() + 1);
     }
+
+    // for(var i=0; i < length; i++){
+    //   var scale = 10;
+    //   currentRange -= distDays[i];
+    //   scale = Math.max(0,Math.floor(10*currentRange/scaleDenominator))
+    //   values.push({ date: new Date(date.getTime()), dist: distDays[i], minRange: currentRange, scale: scale })
+
+    //   if(currentRange < refuelThreshold) {
+    //     currentRange = range;
+    //   }
+    //   date.setDate(date.getDate() + 1);
+    // }
+
     return values;
   }
 
   calcDistPerDay(distPerDayWeekday){
-    var length = DAYS;
-    var days = new Array(length);
+    let length = DAYS;
+    let days = new Array(length);
     days.fill(distPerDayWeekday, 0, length);
     
     for(var week=0; week<52; week++){
-      if(week%7==4){
+      if( week % 7 == 4 ){
         days[week*7-2] = 400
       }
-      if(week%4==2){
+      if( week % 4 == 2 ){
         days[week*7-1] = 200
       }
     }
@@ -119,27 +137,27 @@ class App extends Component {
   }
 
   calcState(milesPerDayWeekday){
-    var distDays = this.calcDistPerDay(milesPerDayWeekday);
 
+    let distDays = this.calcDistPerDay(milesPerDayWeekday);
     var evDists = this.calcMinDistances(distDays, DEFAULT_ICE_RANGE, DEFAULT_EV_RANGE, DEFAULT_EV_RANGE);
     var iceDists = this.calcMinDistances(distDays, DEFAULT_ICE_RANGE, DEFAULT_ICE_RANGE, DEFAULT_MIN_ICE_RANGE);
     
-    var len = evDists.length;
-    var reducer = (a,c) => a + c.minRange/len
+    let len = evDists.length;
+    const reducer = (a,c) => a + c.minRange/len
 
-    var evAvg = Math.floor(evDists.reduce(reducer, 0));
-    var iceAvg = Math.floor(iceDists.reduce(reducer, 0));
+    let iceAvgMinRange = Math.floor(iceDists.reduce(reducer, 0));
+    let evAvgMinRange = Math.floor(evDists.reduce(reducer, 0));
   
     return {
-      milesPerDayWeekday: milesPerDayWeekday,
-      evAvgMinRange: evAvg,
+      milesPerDayWeekday,
+      iceAvgMinRange,
+      evAvgMinRange,
       evDates: evDists,
-      iceAvgMinRange: iceAvg,
       iceDates: iceDists
     }
   }
 
-  changeMilesPerWeekday(e){
+  changeMilesPerWeekday = (e) => {
     this.setState(this.calcState(parseInt(e.target.value)));
   }
 
