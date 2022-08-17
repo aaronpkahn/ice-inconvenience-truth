@@ -2,15 +2,21 @@
   text-align: center;
 }
 
+section.main {
+  max-width: 1244px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
 .App-header {
   background-color: #282c34;
-  /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  margin-bottom: 30px;
 }
 
 .App-link {
