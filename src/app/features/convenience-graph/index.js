@@ -51,23 +51,42 @@ function ConvenienceGraph( { milesDriven }) {
           },
         ],
     };
+
+    const test = ( foo ) => {
+        console.log( foo );
+        return 'test';
+    }
     
     const chartOptions = {
+        scales: {
+            y: {
+                ticks: {
+                    callback: ( value ) => {
+                        return `${value} miles`
+                    }
+                }
+            }
+        },
+        tooltip: {
+            callbacks: {
+                test: test
+            }
+        },
         responsive: true,
         plugins: {
             legend: {
                 position: 'top',
             },
-            title: {
-                display: true,
-                text: 'Chart.js Line Chart',
-            },
+            title: { display: false, },
         },
         elements: { line: { tension: 0 } },
     };
 
     return (
-        <Line options={chartOptions} data={chartData} />
+        <div>
+            <h2>Fueling & Maintenance Time</h2>
+            <Line options={chartOptions} data={chartData} />
+        </div>
     )
 }
 

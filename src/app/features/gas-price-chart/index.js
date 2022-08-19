@@ -53,6 +53,15 @@ function GasPriceChart() {
     };
     
     const chartOptions = {
+        scales: {
+            y: {
+                ticks: {
+                    callback: ( value ) => {
+                        return `$${Number(value).toFixed(2)}`
+                    }
+                }
+            }
+        },
         responsive: true,
         plugins: {
             legend: {
