@@ -4,6 +4,12 @@ import { nest, key, entries } from 'd3-collection';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import * as graphService from '../convenience-graph/service';
+import { getDataExtremes, getMaxPoints } from './service';
+
+import XAxis from './XAxis';
+import YAxis from './YAxis';
+import LineChart from './LineChart';
+import GraphDots from './GraphDots';
 
 import './style.css';
 
@@ -16,60 +22,6 @@ const MARGINS = {
 
 const HEIGHT = 500;
 const WIDTH = 700;
-
-function getMaxPoints( arr ) {
-    const r = [];
-
-    for ( let i = 0; i < arr.length; i++) {
-        if ( i === 0 || i === arr.length - 1 ) {
-            continue;
-        }
-
-        if (arr[i].minRange < arr[i-1].minRange &&
-            arr[i].minRange < arr[i+1].minRange
-        ) {
-            r.push(arr[i]);
-        }
-    }
-
-    return r;
-}
-
-function getDataExtremes(arr) {
-    
-    const r = [];
-
-    for (let i = 0; i < arr.length; i++) {
-
-        if ( i === 0 || i === arr.length - 1 ) {
-            r.push(arr[i]);
-            continue;
-        }
-
-        if ( arr[i-1].minRange === arr[i].minRange ) {
-            r.push(arr[i]);
-            continue;
-        }
-
-        //  get the lowest point on the graph
-        if (    arr[i].minRange < arr[i-1].minRange && 
-                arr[i].minRange < arr[i+1].minRange 
-        ) {
-            r.push(arr[i]);
-            continue;
-        }
-
-        //  get highest point
-        if (arr[i].minRange > arr[i-1].minRange &&
-            arr[i].minRange > arr[i+1].minRange
-        ) {
-            r.push(arr[i]);
-        }
-
-    }
-
-    return r;
-}
 
 function D3Chart( { data } ) {
 
@@ -109,44 +61,10 @@ function D3Chart( { data } ) {
     const defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
     const D = d3.map( iceDates, defined );
     
-    useEffect( () => {
+    useEffect(() => {
 
         const svg = d3.select( d3Container.current );
-
-        const line = d3.line()
-            .curve( d3.curveMonotoneX )
-            .x( i => xScale( i.date ) )
-            .y( i => yScale( i.minRange ) );
-
-        svg.append( "g" )
-            .attr( "transform", `translate( 0, ${HEIGHT - MARGINS.bottom})` )
-            .call( xAxis );
-
-        svg.append( "g" )
-            .attr( "transform", `translate( ${MARGINS.left}, 0 )`)
-            .call ( yAxis )
-            // .call(g => g.select(".domain").remove());
-
-        svg.append( 'path' )
-            .data( [evData] )
-            .attr("fill", "none")
-            .attr("stroke", "blue")
-            .attr("stroke-width", 1.5)
-            .attr("stroke-linecap", "round")
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-opacity", 1)
-            .attr("d", line);
-
-        svg.append( 'path' )
-            .data( [iceData] )
-            .attr("fill", "none")
-            .attr("stroke", "red")
-            .attr("stroke-width", 1.5)
-            .attr("stroke-linecap", "round")
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-opacity", 1)
-            .attr("d", line);
-
+    
         svg.selectAll(".dot")
             .data( iceCosts )
             .enter()
@@ -158,6 +76,20 @@ function D3Chart( { data } ) {
 
     }, [ data, d3Container.current ] );
 
+    const metaData = {
+        xScale: xScale,
+        yScale: yScale,
+        margins: MARGINS,
+        height: HEIGHT,
+        width: WIDTH,
+    }
+    
+    const chartData = {
+        evData: evData,
+        iceData: iceData,
+        iceCosts: iceCosts,
+    }
+
     return (
         <>
             <svg 
@@ -166,7 +98,16 @@ function D3Chart( { data } ) {
                 width={WIDTH}
                 height={HEIGHT}
                 ref={d3Container}
-            />
+            >
+                <g>
+                    <XAxis {...metaData} />
+                    <YAxis {...metaData} />
+                </g>
+                <g>
+                    <LineChart {...metaData} {...chartData} />
+                    <GraphDots {...metaData} {...chartData} />
+                </g>
+            </svg>
         </>
     )
 
