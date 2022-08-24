@@ -1,0 +1,7 @@
+circle:hover {
+    stroke: 1px solid purple;
+}
+
+circle {
+    fill: red;
+}

@@ -1,3 +1,7 @@
+path {
+    pointer-events: none;
+}
+
 fieldset {
     border: none;
     display: flex;

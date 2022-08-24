@@ -1,9 +1,11 @@
 import * as d3 from 'd3';
-import { svg } from 'd3';
+import { easeExpInOut, svg } from 'd3';
 import { nest, key, entries } from 'd3-collection';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import * as graphService from '../convenience-graph/service';
+
+import './style.css';
 
 const MARGINS = {
     top: 20,
@@ -15,63 +17,106 @@ const MARGINS = {
 const HEIGHT = 500;
 const WIDTH = 700;
 
+function getMaxPoints( arr ) {
+    const r = [];
+
+    for ( let i = 0; i < arr.length; i++) {
+        if ( i === 0 || i === arr.length - 1 ) {
+            continue;
+        }
+
+        if (arr[i].minRange < arr[i-1].minRange &&
+            arr[i].minRange < arr[i+1].minRange
+        ) {
+            r.push(arr[i]);
+        }
+    }
+
+    return r;
+}
+
+function getDataExtremes(arr) {
+    
+    const r = [];
+
+    for (let i = 0; i < arr.length; i++) {
+
+        if ( i === 0 || i === arr.length - 1 ) {
+            r.push(arr[i]);
+            continue;
+        }
+
+        if ( arr[i-1].minRange === arr[i].minRange ) {
+            r.push(arr[i]);
+            continue;
+        }
+
+        //  get the lowest point on the graph
+        if (    arr[i].minRange < arr[i-1].minRange && 
+                arr[i].minRange < arr[i+1].minRange 
+        ) {
+            r.push(arr[i]);
+            continue;
+        }
+
+        //  get highest point
+        if (arr[i].minRange > arr[i-1].minRange &&
+            arr[i].minRange > arr[i+1].minRange
+        ) {
+            r.push(arr[i]);
+        }
+
+    }
+
+    return r;
+}
+
 function D3Chart( { data } ) {
 
     const d3Container = useRef(null);
 
     const iceRange = useSelector( (state) => state.inputs.average_ice_range );
 
-    const { evDates, iceDates } = graphService.calcState( data, iceRange );
+    let { evDates, iceDates } = graphService.calcState( data, iceRange );
 
-    const combinedData = [ ...evDates, ...iceDates];
+    evDates = evDates.slice(0,30);
+    iceDates = iceDates.slice(0,30);
 
-    const sumDates = d3.group( combinedData, d => d.date );
+    const iceData = getDataExtremes(iceDates);
+    const evData = getDataExtremes(evDates);
 
-    const sumData = Array.from( sumDates, ([key, [ice, ev]]) => {
-        if ( typeof ev.minRange === undefined ) {
-            console.error( 'undefined', key );
-        }
-        return {
-            date: key,
-            iceRange: ice.minRange,
-            evRange: ev.minRange
-        }
-    });
+    const iceCosts = getMaxPoints(iceDates, false);
 
-    const defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
+    //  we will combine the data together to get the ranges across the entire set
+    const combinedData = [ ...evDates.slice(0,90), ...iceDates.slice(0,90)];
 
     const xRange = [ MARGINS.left, WIDTH - MARGINS.right ];
     const yRange = [ HEIGHT - MARGINS.bottom, MARGINS.top ];
-
+    
     const X = d3.map( combinedData, ( { date } ) => date );
     const Y = d3.map( combinedData, ( { minRange } ) => minRange );
     const I = d3.range( X.length );
-
+    
     const xDomain = d3.extent( X );
-    const yDomain = [ 0, d3.max( Y ) ];
-
+    const yDomain = [ -20, d3.max( Y ) + 20 ];
+    
     const xScale = d3.scaleTime( xDomain, xRange );
     const yScale = d3.scaleLinear( yDomain, yRange );
-
+    
     const xAxis = d3.axisBottom( xScale );
     const yAxis = d3.axisLeft( yScale );
-
-    const D = d3.map( sumData, defined );
-
+    
+    const defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
+    const D = d3.map( iceDates, defined );
+    
     useEffect( () => {
 
         const svg = d3.select( d3Container.current );
 
         const line = d3.line()
-            .defined( i => D[i] )
-            .curve( d3.curveLinear )
-            .x( i => xScale( X[i]) )
-            .y( i => yScale( Y[i] ) );
-
-        const evLine = d3.line()
-            .curve( d3.curveLinear )
+            .curve( d3.curveMonotoneX )
             .x( i => xScale( i.date ) )
-            .y( i => yScale( i.evRange ) );
+            .y( i => yScale( i.minRange ) );
 
         svg.append( "g" )
             .attr( "transform", `translate( 0, ${HEIGHT - MARGINS.bottom})` )
@@ -82,42 +127,34 @@ function D3Chart( { data } ) {
             .call ( yAxis )
             // .call(g => g.select(".domain").remove());
 
-        // svg.selectAll(".line")
-        //     .data(sum)
-        //     .enter()
-        //     .append("path")
-        //     .attr("fill", "none")
-        //     .attr("stroke", "blue")
-        //     .attr("stroke-width", 1.5)
-        //     .attr("stroke-linecap", "round")
-        //     .attr("stroke-linejoin", "round")
-        //     .attr("stroke-opacity", 1)
-        //     // .attr("d", (d) => line( d.values ))
-        //     .attr("d", (d) => {
-        //         return d3.line()
-        //             .x( (node) => xScale(node.date) )
-        //             .y( (node) => yScale(node.value) )
-        //             (d.values)
-        //     });
-
         svg.append( 'path' )
-            .data( [sumData] )
+            .data( [evData] )
             .attr("fill", "none")
             .attr("stroke", "blue")
             .attr("stroke-width", 1.5)
             .attr("stroke-linecap", "round")
             .attr("stroke-linejoin", "round")
             .attr("stroke-opacity", 1)
-            .attr("d", evLine);
+            .attr("d", line);
 
-        // svg.append( 'path' )
-        //     .attr("fill", "none")
-        //     .attr("stroke", "red")
-        //     .attr("stroke-width", 1.5)
-        //     .attr("stroke-linecap", "round")
-        //     .attr("stroke-linejoin", "round")
-        //     .attr("stroke-opacity", 1)
-        //     .attr("d", line2(I2));
+        svg.append( 'path' )
+            .data( [iceData] )
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linecap", "round")
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-opacity", 1)
+            .attr("d", line);
+
+        svg.selectAll(".dot")
+            .data( iceCosts )
+            .enter()
+            .append("circle")
+            .attr("r", 6)
+            .attr("cx", d => xScale( d.date ))
+            .attr("cy", d => yScale( d.minRange ))
+            // .style("fill", "purple");
 
     }, [ data, d3Container.current ] );
 
