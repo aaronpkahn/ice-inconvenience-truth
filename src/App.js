@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import ConvenienceGraph from './app/features/convenience-graph';
+import D3Chart from './app/features/d3-convenience-graph';
 import GasPriceChart from './app/features/gas-price-chart';
 import InputForm from './app/features/input-form';
 
@@ -19,7 +20,8 @@ function App() {
         <InputForm />
       </section>
       <section className="main">
-        <ConvenienceGraph milesDriven={milesDriven}/>
+        {/* <ConvenienceGraph milesDriven={milesDriven}/> */}
+        <D3Chart data={milesDriven}/>
       </section>
       <section className="main">
         <GasPriceChart />
