@@ -1,38 +1,28 @@
 import { useEffect, useRef } from "react";
 import * as d3 from 'd3';
 
-function GraphDots( { xScale, yScale, iceCosts } ) {
+function GraphDots( { xScale, yScale, data } ) {
 
     const anchor = useRef(null);
 
     useEffect(() => {
 
         const svg = d3.select(anchor.current);        
-        const dotUpdate = svg.selectAll('.dot').data( iceCosts );
+        const update = svg.selectAll('.dot').data( data );
 
-        dotUpdate.enter()
+        update.enter()
             .append("circle")
             .attr("class", "dot")
-            .merge(dotUpdate)
+            .merge(update)
             .transition()
             .duration(600)
             .attr("r", 6)
-            .attr("cx", d => xScale( d.date ))
-            .attr("cy", d => yScale( d.minRange ));
+            .attr("cx", d => xScale( d.x ))
+            .attr("cy", d => yScale( d.y ));
 
-        const hoverUpdate = svg.selectAll('.test3').data( iceCosts );
-        hoverUpdate.enter()
-            .merge(hoverUpdate)
-            .append("text")
-            .attr( "class", "test3" )
-            .text(d => d.minRange)
-            .attr("x", d => xScale( d.date))
-            .attr("y", d => yScale( d.minRange ));
-        
-        dotUpdate.exit().remove();
-        hoverUpdate.exit().remove();
+        update.exit().remove();
      
-    }, [ xScale, yScale, iceCosts ] );
+    }, [ xScale, yScale, data ] );
     
     return( 
         <g ref={anchor}></g>

@@ -4,6 +4,7 @@ import { CAR_DATA } from '../../globals';
 
 import Card from '../../components/card';
 import Slider from '../../components/slider/slider';
+import Button from '../../components/button';
 
 import './style.css';
 
@@ -38,7 +39,7 @@ function InputForm() {
                 <Slider options={[10,20,30,40,50]} onChange={updateMilesPerWeekday} />
                 <span>miles to work every day</span>
             </fieldset>
-            
+            <Button>Test</Button>
         </Card>
     )
 }

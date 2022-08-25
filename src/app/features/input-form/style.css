@@ -16,17 +16,19 @@ fieldset select {
 }
 
 button.car-select {
-    padding: 10px 20px;
+    padding: 1rem 2rem;
     background: none;
-    border: 2px solid #Dedede;
-    border-radius: 2px;
+    border: none;
+    border-radius: .5rem;
     cursor: pointer;
+    border: 1px solid transparent;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.3);
 }
 
 button.car-select:hover {
-    border-color: green;
+    border-color: var(--blue);
 }
 
 button.car-select.active {
-    border-color: green;
+    border-color: var(--blue);
 }

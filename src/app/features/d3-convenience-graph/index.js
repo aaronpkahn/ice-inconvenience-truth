@@ -1,95 +1,29 @@
-import * as d3 from 'd3';
-import { easeExpInOut, svg } from 'd3';
-import { nest, key, entries } from 'd3-collection';
-import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import * as graphService from '../convenience-graph/service';
-import { getDataExtremes, getMaxPoints } from './service';
 
-import XAxis from './XAxis';
-import YAxis from './YAxis';
-import LineChart from './LineChart';
-import GraphDots from './GraphDots';
+import LineGraph from './LineGraph';
+import { Slide, SlideInner } from '../../components/slide';
 
 import './style.css';
 
-const MARGINS = {
-    top: 20,
-    right: 20,
-    bottom: 20,
-    left: 50,
-};
+function ConvenienceChart( { } ) {
 
-const HEIGHT = 500;
-const WIDTH = 700;
-
-function D3Chart( { data } ) {
-
-    const d3Container = useRef(null);
-
-    const iceRange = useSelector( (state) => state.inputs.average_ice_range );
-
-    let { evDates, iceDates } = graphService.calcState( data, iceRange );
-
-    evDates = evDates.slice(0,90);
-    iceDates = iceDates.slice(0,90);
-
-    const iceData   = getDataExtremes(iceDates);
-    const evData    = getDataExtremes(evDates);
-    const iceCosts  = getMaxPoints(iceDates, false);
-
-    //  we will combine the data together to get the ranges across the entire set
-    const combinedData = [ ...evDates, ...iceDates];
-
-    const xRange = [ MARGINS.left, WIDTH - MARGINS.right ];
-    const yRange = [ HEIGHT - MARGINS.bottom, MARGINS.top ];
-    
-    const X = d3.map( combinedData, ( { date } ) => date );
-    const Y = d3.map( combinedData, ( { minRange } ) => minRange );
-    const I = d3.range( X.length );
-    
-    const xDomain = d3.extent( X );
-    const yDomain = [ -20, d3.max( Y ) + 20 ];
-    
-    const xScale = d3.scaleTime( xDomain, xRange );
-    const yScale = d3.scaleLinear( yDomain, yRange );
-    
-    const defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
-    const D = d3.map( iceDates, defined );
-
-    const metaData = {
-        xScale: xScale,
-        yScale: yScale,
-        margins: MARGINS,
-        height: HEIGHT,
-        width: WIDTH,
-    }
-    
-    const chartData = {
-        evData: evData,
-        iceData: iceData,
-        iceCosts: iceCosts,
-    }
+    const iceRange      = useSelector( (state) => state.inputs.average_ice_range );
+    const milesDriven   = useSelector((state) => state.inputs.milesDriven);
 
     return (
-        <svg 
-            className="d3-graph"
-            viewBox={[0,0,WIDTH, HEIGHT]}
-            width={WIDTH}
-            height={HEIGHT}
-            ref={d3Container}
-        >
-            <g>
-                <XAxis {...metaData} />
-                <YAxis {...metaData} />
-            </g>
-            <g>
-                <LineChart {...metaData} {...chartData} />
-                <GraphDots {...metaData} {...chartData} />
-            </g>
-        </svg>
+        <Slide>
+            <h1>Your Inconvenience Factor</h1>
+            <SlideInner>
+                <div>
+                    <h1>2,000 hours</h1>
+                    <h4>spent yearly refilling your vehicle</h4>
+                    <h1>$500</h1>
+                    <h4>your monthly spend on gas</h4>
+                </div>
+                <LineGraph iceRange={iceRange} milesDriven={milesDriven} />
+            </SlideInner>
+        </Slide>
     )
-
 }
 
-export default D3Chart;
+export default ConvenienceChart;

@@ -10,7 +10,6 @@ import {
 } from 'chart.js';
 import chartTrendLine from 'chartjs-plugin-trendline';
 import { Line } from 'react-chartjs-2';
-import Card from '../../components/card';
 
 ChartJS.register(
     CategoryScale,
@@ -25,7 +24,7 @@ ChartJS.register(
 
 const _data = require('./data.json');
 
-function GasPriceChart() {
+function PriceGraph() {
 
     //  sort data by date
     const data = _data.sort( (a,b) => new Date(a[0]) > new Date(b[0]) ? 1 : -1 );
@@ -73,11 +72,8 @@ function GasPriceChart() {
     };
 
     return (
-        <Card>
-            <h2>Gas Prices Over Time</h2>
-            <Line options={chartOptions} data={chartData} />
-        </Card>
+        <Line options={chartOptions} data={chartData} />
     )
 }
 
-export default GasPriceChart;
+export default PriceGraph;
