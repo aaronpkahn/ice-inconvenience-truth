@@ -7,9 +7,9 @@ function GraphDots( { xScale, yScale, iceCosts } ) {
 
     useEffect(() => {
 
-        const svg = d3.select(anchor.current);
-        
+        const svg = d3.select(anchor.current);        
         const dotUpdate = svg.selectAll('.dot').data( iceCosts );
+
         dotUpdate.enter()
             .append("circle")
             .attr("class", "dot")
@@ -18,7 +18,19 @@ function GraphDots( { xScale, yScale, iceCosts } ) {
             .duration(600)
             .attr("r", 6)
             .attr("cx", d => xScale( d.date ))
-            .attr("cy", d => yScale( d.minRange ))
+            .attr("cy", d => yScale( d.minRange ));
+
+        const hoverUpdate = svg.selectAll('.test3').data( iceCosts );
+        hoverUpdate.enter()
+            .merge(hoverUpdate)
+            .append("text")
+            .attr( "class", "test3" )
+            .text(d => d.minRange)
+            .attr("x", d => xScale( d.date))
+            .attr("y", d => yScale( d.minRange ));
+        
+        dotUpdate.exit().remove();
+        hoverUpdate.exit().remove();
      
     }, [ xScale, yScale, iceCosts ] );
     

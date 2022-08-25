@@ -29,8 +29,6 @@ function LineChart( { xScale, yScale, evData, iceData }) {
             .attr("stroke-opacity", 1)
             .attr("d", line);
 
-        evUpdate.exit().remove();
-
         const iceUpdate = g.selectAll('.test2').data( [iceData] );
         iceUpdate.enter()
             .append( 'path' )
@@ -46,6 +44,7 @@ function LineChart( { xScale, yScale, evData, iceData }) {
             .attr("stroke-opacity", 1)
             .attr("d", line);
         
+        evUpdate.exit().remove();
         iceUpdate.exit().remove();
 
     }, [ xScale, yScale, evData, iceData ] );

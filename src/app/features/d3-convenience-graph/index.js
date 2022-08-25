@@ -31,16 +31,15 @@ function D3Chart( { data } ) {
 
     let { evDates, iceDates } = graphService.calcState( data, iceRange );
 
-    evDates = evDates.slice(0,30);
-    iceDates = iceDates.slice(0,30);
+    evDates = evDates.slice(0,90);
+    iceDates = iceDates.slice(0,90);
 
-    const iceData = getDataExtremes(iceDates);
-    const evData = getDataExtremes(evDates);
-
-    const iceCosts = getMaxPoints(iceDates, false);
+    const iceData   = getDataExtremes(iceDates);
+    const evData    = getDataExtremes(evDates);
+    const iceCosts  = getMaxPoints(iceDates, false);
 
     //  we will combine the data together to get the ranges across the entire set
-    const combinedData = [ ...evDates.slice(0,90), ...iceDates.slice(0,90)];
+    const combinedData = [ ...evDates, ...iceDates];
 
     const xRange = [ MARGINS.left, WIDTH - MARGINS.right ];
     const yRange = [ HEIGHT - MARGINS.bottom, MARGINS.top ];
@@ -55,26 +54,8 @@ function D3Chart( { data } ) {
     const xScale = d3.scaleTime( xDomain, xRange );
     const yScale = d3.scaleLinear( yDomain, yRange );
     
-    const xAxis = d3.axisBottom( xScale );
-    const yAxis = d3.axisLeft( yScale );
-    
     const defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
     const D = d3.map( iceDates, defined );
-    
-    useEffect(() => {
-
-        const svg = d3.select( d3Container.current );
-    
-        svg.selectAll(".dot")
-            .data( iceCosts )
-            .enter()
-            .append("circle")
-            .attr("r", 6)
-            .attr("cx", d => xScale( d.date ))
-            .attr("cy", d => yScale( d.minRange ))
-            // .style("fill", "purple");
-
-    }, [ data, d3Container.current ] );
 
     const metaData = {
         xScale: xScale,
@@ -91,24 +72,22 @@ function D3Chart( { data } ) {
     }
 
     return (
-        <>
-            <svg 
-                className="d3-graph"
-                viewBox={[0,0,WIDTH, HEIGHT]}
-                width={WIDTH}
-                height={HEIGHT}
-                ref={d3Container}
-            >
-                <g>
-                    <XAxis {...metaData} />
-                    <YAxis {...metaData} />
-                </g>
-                <g>
-                    <LineChart {...metaData} {...chartData} />
-                    <GraphDots {...metaData} {...chartData} />
-                </g>
-            </svg>
-        </>
+        <svg 
+            className="d3-graph"
+            viewBox={[0,0,WIDTH, HEIGHT]}
+            width={WIDTH}
+            height={HEIGHT}
+            ref={d3Container}
+        >
+            <g>
+                <XAxis {...metaData} />
+                <YAxis {...metaData} />
+            </g>
+            <g>
+                <LineChart {...metaData} {...chartData} />
+                <GraphDots {...metaData} {...chartData} />
+            </g>
+        </svg>
     )
 
 }
