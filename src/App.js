@@ -1,4 +1,4 @@
-import ConvenienceChart from './app/features/d3-convenience-graph';
+import ConvenienceSlide from './app/features/convenience';
 import GasPrice from './app/features/gas-price';
 import InputForm from './app/features/input-form';
 
@@ -17,7 +17,7 @@ function App() {
       </section>
 
       <section className="main">
-        <ConvenienceChart />
+        <ConvenienceSlide />
       </section>
 
       <section className="main">

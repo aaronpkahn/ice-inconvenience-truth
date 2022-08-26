@@ -1,78 +1,30 @@
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-import chartTrendLine from 'chartjs-plugin-trendline';
-import { Line } from 'react-chartjs-2';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    chartTrendLine,
-);
+import { LineGraph, Line } from '../../components/d3-line-chart';
 
 const _data = require('./data.json');
 
+const MARGINS = {
+    top: 20,
+    right: 20,
+    bottom: 20,
+    left: 50,
+};
+
+const HEIGHT = 500;
+const WIDTH = 700;
+
 function PriceGraph() {
 
-    //  sort data by date
-    const data = _data.sort( (a,b) => new Date(a[0]) > new Date(b[0]) ? 1 : -1 );
-    const chartLabels = data.map( (value) => value[0] );
-
-    const chartData = {
-        labels: chartLabels,
-        datasets: [
-          {
-            label: '$/gal',
-            data: data.map( value => value[1] ),
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            lineTension: 0.4,        
-            radius: 0,
-            trendlineLinear: {
-                style: "rgba(255,105,180, .8)",
-                lineStyle: "dotted",
-                width: 2,
-                projection: true
-            }
-          },
-          
-        ],
-    };
-    
-    const chartOptions = {
-        scales: {
-            y: {
-                ticks: {
-                    callback: ( value ) => {
-                        return `$${Number(value).toFixed(2)}`
-                    }
-                }
-            }
-        },
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: { display: false },
-        },
-        elements: { line: { tension: 0 } },
-    };
+    const data = _data.map( ( [date, price ] ) => { return { x: new Date(date), y: price } } );
 
     return (
-        <Line options={chartOptions} data={chartData} />
+        <LineGraph margins={MARGINS} width={WIDTH} height={HEIGHT} data={ [ data ] } ybuffer={0}>
+        {metaData => (
+            <>
+                <Line data={data} fill={"#35478C"} {...metaData}/> 
+            </>
+        )}
+        </LineGraph>
     )
 }
 

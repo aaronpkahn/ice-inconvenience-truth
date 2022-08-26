@@ -9,6 +9,8 @@ function XAxis( { xScale, margins, height  } ) {
         
         const axis = d3.axisBottom( xScale );
 
+        axis.ticks().tickValues();
+
         d3.select(anchor.current)
             .transition()
             .call(axis);

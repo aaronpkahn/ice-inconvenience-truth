@@ -1,11 +1,11 @@
 import { useSelector } from 'react-redux';
 
-import LineGraph from './LineGraph';
+import ConvenienceGraph from './ConvenienceGraph';
 import { Slide, SlideInner } from '../../components/slide';
 
 import './style.css';
 
-function ConvenienceChart( { } ) {
+function ConvenienceSlide( { } ) {
 
     const iceRange      = useSelector( (state) => state.inputs.average_ice_range );
     const milesDriven   = useSelector((state) => state.inputs.milesDriven);
@@ -20,10 +20,10 @@ function ConvenienceChart( { } ) {
                     <h1>$500</h1>
                     <h4>your monthly spend on gas</h4>
                 </div>
-                <LineGraph iceRange={iceRange} milesDriven={milesDriven} />
+                <ConvenienceGraph iceRange={iceRange} milesDriven={milesDriven} />
             </SlideInner>
         </Slide>
     )
 }
 
-export default ConvenienceChart;
+export default ConvenienceSlide;
