@@ -1,6 +1,6 @@
 import Card from '../../components/card';
 import { Slide, SlideInner } from '../../components/slide';
-import PriceGraph from './PriceGraph';
+import PriceGraph2 from './PriceGraph2';
 
 function GasPrice() {
 
@@ -12,7 +12,7 @@ function GasPrice() {
                     <h4>Gas prices are rising</h4>
                     <h2>12.5% a year</h2>
                 </div>
-                <PriceGraph />
+                <PriceGraph2 />
             </SlideInner>
         </Slide>
     )

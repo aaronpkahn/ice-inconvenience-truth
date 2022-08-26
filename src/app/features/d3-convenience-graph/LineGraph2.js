@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import XAxis from './XAxis';
 import YAxis from './YAxis';
 
-function LineGraph2( { children, margins, width, height, data } ) {
+function LineGraph2( { children, margins, width, height, data, ybuffer = 0 } ) {
 
     const combinedData = data.reduce( (prev, current ) => { return [ ...prev, ...current ]}, []);
 
@@ -14,7 +14,7 @@ function LineGraph2( { children, margins, width, height, data } ) {
     const I = d3.range( X.length );
     
     const xDomain = d3.extent( X );
-    const yDomain = [ -20, d3.max( Y ) + 20 ];
+    const yDomain = [ -ybuffer, d3.max( Y ) + ybuffer ];
     
     const xScale = d3.scaleTime( xDomain, xRange );
     const yScale = d3.scaleLinear( yDomain, yRange );

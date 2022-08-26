@@ -29,7 +29,7 @@ function LineGraph( { milesDriven, iceRange } ) {
     let iceCosts  = getMaxPoints(iceDates, false);
 
     return (
-        <LineGraph2 margins={MARGINS} width={WIDTH} height={HEIGHT} data={ [ evData, iceData ] }>
+        <LineGraph2 margins={MARGINS} width={WIDTH} height={HEIGHT} data={ [ evData, iceData ] } ybuffer={20}>
             {metaData => (
                 <>
                     <Line data={evData} fill={"#35478C"} {...metaData}/> 

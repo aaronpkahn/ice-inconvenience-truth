@@ -14,10 +14,10 @@ function Line( { xScale, yScale, data, fill = "#35478C" }) {
                 
         const g = d3.select(anchor.current);
 
-        const update = g.selectAll('.test').data( [data] );
+        const update = g.selectAll('.line').data( [data] );
         update.enter()
             .append( 'path' )
-            .attr("class","test")
+            .attr("class","line")
             .merge( update )
             .transition()
             .duration(600)
