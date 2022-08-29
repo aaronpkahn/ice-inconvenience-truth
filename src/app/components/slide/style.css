@@ -9,3 +9,7 @@
     align-items: center;
     text-align: left;
 }
+
+.slide-inner > * {
+    flex-basis: 50%;
+}

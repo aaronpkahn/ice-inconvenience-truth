@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from 'd3';
 
-function GraphDots( { xScale, yScale, data } ) {
+function GraphDots( { xScale, yScale, data, opacity = 1 } ) {
 
     const anchor = useRef(null);
 
@@ -17,6 +17,7 @@ function GraphDots( { xScale, yScale, data } ) {
             .transition()
             .duration(600)
             .attr("r", 6)
+            .attr( "opacity", opacity )
             .attr("cx", d => xScale( d.x ))
             .attr("cy", d => yScale( d.y ));
 

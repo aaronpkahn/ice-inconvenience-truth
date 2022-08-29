@@ -1,10 +1,14 @@
 import ConvenienceSlide from './app/features/convenience';
 import GasPrice from './app/features/gas-price';
 import InputForm from './app/features/input-form';
+import { useSelector } from 'react-redux';
 
 import './App.css';
 
 function App() {
+
+  const dataEntered = useSelector( (state) => state.inputs.dataEntered);
+  
 
   return (
     <div className="app">
@@ -16,9 +20,11 @@ function App() {
         <InputForm />
       </section>
 
-      <section className="main">
-        <ConvenienceSlide />
-      </section>
+      { dataEntered && (
+        <section className="main">
+          <ConvenienceSlide />
+        </section>
+      )}
 
       <section className="main">
         <GasPrice />
