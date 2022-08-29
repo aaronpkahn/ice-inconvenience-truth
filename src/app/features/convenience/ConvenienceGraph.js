@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import * as graphService from '../convenience-graph/service';
 import { LineGraph, Line, GraphDots } from '../../components/d3-line-chart';
 import { getDataExtremes, getMaxPoints } from './service';
@@ -25,8 +26,24 @@ function ConvenienceGraph( { milesDriven, iceRange } ) {
     let evData    = getDataExtremes(evDates);
     let iceCosts  = getMaxPoints(iceDates, false);
 
+    const yAxisFn = ( axis ) => {
+        axis.ticks( 3 ).tickValues();
+    }
+
+    const xAxisFn = ( axis ) => {
+        // axis.ticks( );
+    }
+
     return (
-        <LineGraph margins={MARGINS} width={WIDTH} height={HEIGHT} data={ [ evData, iceData ] } ybuffer={20}>
+        <LineGraph 
+            margins={MARGINS} 
+            width={WIDTH} 
+            height={HEIGHT} 
+            data={ [ evData, iceData ] } 
+            ybuffer={20} 
+            yAxisFn={yAxisFn}
+            xAxisFn={xAxisFn}
+        >
             {metaData => (
                 <>
                     <Line data={evData} fill={"#35478C"} {...metaData}/> 

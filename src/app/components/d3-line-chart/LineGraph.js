@@ -8,7 +8,9 @@ function LineGraph( props ) {
         width, 
         height, 
         data, 
-        ybuffer = 0 
+        ybuffer = 0,
+        yAxisFn,
+        xAxisFn,
     } = props;
 
     const { xScale, yScale } = d3Service.calculateScales( props );
@@ -19,6 +21,8 @@ function LineGraph( props ) {
         margins: margins,
         height: height,
         width: width,
+        yAxisFn: yAxisFn,
+        xAxisFn: xAxisFn 
     }
     
     return (
