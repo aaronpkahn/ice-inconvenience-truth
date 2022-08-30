@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DEFAULT_MILES_PER_DAY_WEEKDAY, DEFAULT_CAR_DRIVEN, DEFAULT_ICE_RANGE } from '../globals';
+import { DEFAULT_MILES_PER_DAY_WEEKDAY, DEFAULT_ICE_RANGE } from '../globals';
 import { CAR_DATA } from '../globals';
 
 export const userSlice = createSlice({

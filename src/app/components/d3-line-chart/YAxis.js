@@ -14,7 +14,7 @@ function YAxis( { yScale, margins, yAxisFn }) {
         }
 
         d3.select(anchor.current)
-            .transition()
+            .transition(0)
             .call(axis);
 
     }, [ yScale ] );

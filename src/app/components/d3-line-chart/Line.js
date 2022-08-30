@@ -1,7 +1,17 @@
 import { useEffect, useRef } from "react";
 import * as d3 from 'd3';
 
-function Line( { xScale, yScale, data, fill = "#35478C", animate = true, opacity = 1 }) {
+function Line( props ) {
+
+    const {
+        xScale, 
+        yScale, 
+        data, 
+        fill = "#35478C", 
+        animate = true, 
+        opacity = 1,
+        animationTime = 300,
+    } = props;
 
     const anchor = useRef(null);
 
@@ -18,9 +28,9 @@ function Line( { xScale, yScale, data, fill = "#35478C", animate = true, opacity
 
         const _line = update.enter()
             .append( 'path' )
-            .attr("d", line )
             .attr( "class", "line" )
-            .merge( update );
+            .merge( update )
+            .attr("d", line );
 
         const length = _line.node().getTotalLength();
  
@@ -28,16 +38,17 @@ function Line( { xScale, yScale, data, fill = "#35478C", animate = true, opacity
             update.attr( "stroke-dasharray", `${length} ${length}` )
                 .attr( "stroke-dashoffset", length )
         }
+
         update.transition()
             .ease( d3.easeLinear )
-            .duration(600)
+            .duration( animationTime )
             .attr("fill", "none")
             .attr("stroke-dashoffset", 0)
             .attr("stroke", fill )
             .attr("stroke-width", 2)
             .attr("stroke-linecap", "round")
             .attr("stroke-linejoin", "round")
-            .attr("stroke-opacity", opacity)
+            .attr("stroke-opacity", opacity);
             
         update.exit().remove();
 

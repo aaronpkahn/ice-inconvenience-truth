@@ -22,11 +22,28 @@ function GraphDots( { xScale, yScale, data, opacity = 1 } ) {
             .attr("cy", d => yScale( d.y ));
 
         update.exit().remove();
+
+        const dots = svg.selectAll('.popup').data( data );
+
+        dots.enter()
+            .merge( dots )
+            .transition(300)
+            .duration(300)
+            .attr( "opacity", opacity );
+
+        dots.exit();
      
     }, [ xScale, yScale, data ] );
     
     return( 
-        <g ref={anchor}></g>
+        <g ref={anchor}>
+            { data.map( (d) => (
+                <g>
+                    <circle key={d.x} className="dot" cx={xScale(d.x)} cy={yScale(d.y)} r={6}></circle>
+                    <text className="popup" textAnchor="start" x={xScale(d.x) - 20} y={yScale(d.y) - 20}> ${d.minRange} </text>
+                </g>
+            ))}
+        </g>
     )
 }
 

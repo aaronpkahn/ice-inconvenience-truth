@@ -1,8 +1,14 @@
 import './style.css';
 
-function Card( { children }) {
+function Card( props ) {
+
+    const {
+        children, 
+        className = "",
+    } = props;
+
     return (
-        <div className="card">
+        <div className={`card ${className}`} {...props} >
             {children}
         </div>
     )

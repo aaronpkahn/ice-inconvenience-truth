@@ -14,7 +14,7 @@ function XAxis( { xScale, margins, height, xAxisFn  } ) {
         }
 
         d3.select(anchor.current)
-            .transition()
+            .transition(0)
             .call(axis);
 
     }, [ xScale ] );

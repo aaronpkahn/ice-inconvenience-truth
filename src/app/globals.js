@@ -14,20 +14,24 @@ export const CAR_DATA = [
         id: 'sedan', 
         label: 'Sedan', 
         average_range: 310,
+        mpg: 25.4,
     },
     {
         id: 'compact_suv', 
         label: 'Compact SUV',
         average_range: 380,
+        mpg: 29.8
     },
     {
         id: 'truck',
         label: 'Truck',
         average_range: 410,
+        mpg: 22.1,
     },
     {
         id: 'hummer',
         label: 'Hummer',
         average_range: 200,
+        mpg: 14,
     }
 ];

@@ -7,9 +7,8 @@ import './App.css';
 
 function App() {
 
-  const dataEntered = useSelector( (state) => state.inputs.dataEntered);
+  const currentSlide = useSelector( (state) => state.slides.currentSlide);
   
-
   return (
     <div className="app">
       <header className="header">
@@ -20,15 +19,17 @@ function App() {
         <InputForm />
       </section>
 
-      { dataEntered && (
+      { 'convenience' === currentSlide && (
         <section className="main">
           <ConvenienceSlide />
         </section>
       )}
 
-      <section className="main">
-        <GasPrice />
-      </section>
+      { 'gas_price' === currentSlide && (
+        <section className="main">
+          <GasPrice />
+        </section>
+      )}
       
     </div>
   )

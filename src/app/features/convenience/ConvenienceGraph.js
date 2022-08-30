@@ -1,7 +1,6 @@
-import * as d3 from 'd3';
-import * as graphService from '../convenience-graph/service';
+import { useEffect } from 'react';
 import { LineGraph, Line, GraphDots } from '../../components/d3-line-chart';
-import { getDataExtremes, getMaxPoints } from './service';
+import * as graphService  from './service';
 
 const MARGINS = {
     top: 20,
@@ -17,14 +16,16 @@ function ConvenienceGraph( { milesDriven, iceRange, slide } ) {
 
     let { evDates, iceDates } = graphService.calcState( milesDriven, iceRange );
 
-    const dataMap = (i) => { return { y: i.minRange, x: i.date } };
+    const dataMap = (i) => { return { y: i.minRange, x: i.date, ...i } };
 
     evDates = evDates.slice(0,60).map( dataMap );
     iceDates = iceDates.slice(0,60).map( dataMap );
 
-    let iceData   = getDataExtremes(iceDates);
-    let evData    = getDataExtremes(evDates);
-    let iceCosts  = getMaxPoints(iceDates, false);
+    let iceData, evData, iceCosts;
+
+    iceData   = graphService.getDataExtremes(iceDates);
+    evData    = graphService.getDataExtremes(evDates);
+    iceCosts  = graphService.getMaxPoints(iceDates, false);
 
     const yAxisFn = ( axis ) => {
         axis.ticks( 3 ).tickValues();
@@ -47,10 +48,10 @@ function ConvenienceGraph( { milesDriven, iceRange, slide } ) {
             {metaData => (
                 <>
                     { slide > 1 && (
-                        <Line data={evData} fill={"#35478C"} {...metaData} animate={true}/> 
+                        <Line data={evData} fill={"#35478C"} {...metaData} animate={true} animateTime={600}/> 
                     )}
-                    <Line data={iceData} fill={"red"} {...metaData} animate={false} opacity={ slide > 1 ? .3 : 1 } />
-                    <GraphDots data={iceCosts} {...metaData}  opacity={ slide > 1 ? 0 : 1 }/>
+                    <Line data={iceData} fill={"red"} {...metaData} animate={false} animateTime={600} opacity={ slide > 1 ? .3 : 1 } />
+                    <GraphDots data={iceCosts} {...metaData}  opacity={ slide > 1 ? .3 : 1 }/>
                 </>
             )}
         </LineGraph>

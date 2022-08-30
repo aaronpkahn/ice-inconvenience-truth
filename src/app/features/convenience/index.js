@@ -1,13 +1,17 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import ConvenienceGraph from './ConvenienceGraph';
 import { Slide, SlideInner } from '../../components/slide';
+import { goToSlide } from '../../hooks/slideSlice';
 
 import './style.css';
+import Button from '../../components/button';
 
 function ConvenienceSlide( { } ) {
 
     const [slide, setSlide] = useState(1);
+
+    const dispatch = useDispatch();
 
     const iceRange      = useSelector( (state) => state.inputs.average_ice_range );
     const milesDriven   = useSelector((state) => state.inputs.milesDriven);
@@ -16,7 +20,7 @@ function ConvenienceSlide( { } ) {
         if ( slide === 1 ) {
             setSlide(2);
         } else {
-            setSlide(1);
+            dispatch( goToSlide( 'gas_price' ) );
         }
     }
 
@@ -27,9 +31,9 @@ function ConvenienceSlide( { } ) {
                 <div>
                     { slide === 1 && ( 
                         <div>
-                            <h4>In a typical gas vehicle, you're refilling approximately</h4>
-                            <h1>2,000 hours</h1>
-                            <h4>spent yearly refilling your vehicle</h4>
+                            <h4>In a typical gas vehicle, you're spending approximately</h4>
+                            <h1>2,000 hours a year</h1>
+                            <h4>refilling your vehicle</h4>
                             <h1>$500</h1>
                             <h4>your monthly spend on gas</h4>
                         </div>
@@ -43,7 +47,7 @@ function ConvenienceSlide( { } ) {
                             <h4>your monthly spend on electricity</h4>
                         </div>
                     )}
-                    <button onClick={updateSlide}>Progress</button>
+                    <Button onClick={updateSlide}>Next</Button>
                 </div>
                 <ConvenienceGraph iceRange={iceRange} milesDriven={milesDriven} slide={slide} />
             </SlideInner>
