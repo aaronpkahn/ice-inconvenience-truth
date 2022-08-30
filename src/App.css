@@ -20,14 +20,3 @@ section.main {
   margin: 0 auto;
   padding: 0 2rem;
 }
-
-header.header {
-  background-color: var(--blue-dark);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  margin-bottom: 2rem;
-}

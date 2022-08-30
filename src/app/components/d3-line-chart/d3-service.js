@@ -5,7 +5,7 @@ import * as d3 from 'd3';
  * @param {*} param0 
  * @returns { xScale, yScale }
  */
-export const calculateScales = ( { margins, width, height, data, ybuffer = 0 }) => {
+export const calculateScales = ( { margins, width, height, data, ybuffer = 0 } ) => {
 
     const combinedData = data.reduce( (prev, current ) => { return [ ...prev, ...current ]}, []);
 

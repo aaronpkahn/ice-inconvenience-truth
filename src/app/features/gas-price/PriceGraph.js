@@ -1,4 +1,3 @@
-
 import { LineGraph, Line } from '../../components/d3-line-chart';
 
 const _data = require('./data.json');
@@ -15,8 +14,10 @@ const WIDTH = 700;
 
 function PriceGraph() {
 
-    const data = _data.sort( ( [ date ], [ date2 ]  ) => { return new Date(date) > new Date(date2) ? 1 : -1 } )
-        .map( ( [date, price ] ) => { return { x: new Date(date), y: price } } );
+    const dataMap = ( [date, price ] ) => { return { x: new Date(date), y: price } };
+    const dataSort =  ( [ date ], [ date2 ]  ) => { return new Date(date) > new Date(date2) ? 1 : -1 };
+
+    const data = _data.sort( dataSort ).map( dataMap );
 
     return (
         <LineGraph margins={MARGINS} width={WIDTH} height={HEIGHT} data={ [ data ] } ybuffer={0}>

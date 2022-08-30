@@ -17,7 +17,7 @@ function InputForm() {
     const dispatch = useDispatch();
     
     const updateMilesPerWeekday = ( event ) => {
-        dispatch(updateMilesDriven( event.target.value ));
+        dispatch( updateMilesDriven( event.target.value ));
     }
     
     const updateCarType = ( value ) => {

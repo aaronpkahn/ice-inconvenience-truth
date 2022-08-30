@@ -1,4 +1,3 @@
-import { current } from '@reduxjs/toolkit';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CAR_DATA } from '../../globals';
@@ -14,23 +13,27 @@ function CarDetails() {
 
     const data = CAR_DATA.find( i => carDriven === i.id );
 
-    const hoverToggle = ( id = null ) => {
-        setCurrentHover( id );
-    }
-
     return (
         <div className="car-details">
-            { data ? (
-                <div>
-                    <span>Your report will be based on an estimated </span>
-                    <span className="info" onClick={() => setCurrentHover("mpg")}>{data.mpg} miles per gallon (MPG) </span> 
-                    <span> and a range of </span>
-                    <span className="info" onClick={() => setCurrentHover("range")}>{data.average_range} miles</span>
-                    <span> driving </span>
-                    <span className="info">{milesDriven} miles</span>
-                    <span> per day</span>
-                </div>
-            ) : '' }
+            { data && (
+                <>
+                    <div>
+                        <span>Your report will be based on an estimated </span>
+                        <span className="info" onClick={() => setCurrentHover("mpg")}>
+                            {`${data.mpg} miles per gallon (MPG)`}
+                        </span> 
+                        <span> and a range of </span>
+                        <span className="info" onClick={() => setCurrentHover("range")}>
+                            {`${data.average_range} miles `}
+                        </span>
+                        <span> driving </span>
+                        <span className="info">
+                            {`${milesDriven} miles `}
+                        </span>
+                        <span> per day</span>
+                    </div>
+                </>
+            )}
             <div className="hover-details">
                 { "range" === currentHover && (
                     <div>Range is calculated by an average report from 2022 here</div>
@@ -39,7 +42,6 @@ function CarDetails() {
                     <div>The average MPG of different vehicle classes is published in a yearly report by the AAA of America</div>
                 )}
             </div>
-
         </div>
     )
 }

@@ -4,6 +4,7 @@ import InputForm from './app/features/input-form';
 import { useSelector } from 'react-redux';
 
 import './App.css';
+import Header from './app/components/header';
 
 function App() {
 
@@ -11,9 +12,7 @@ function App() {
   
   return (
     <div className="app">
-      <header className="header">
-        <h1>ICE Inconvenience Truth</h1>
-      </header>
+      <Header />
       
       <section className="main">
         <InputForm />

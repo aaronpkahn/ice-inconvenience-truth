@@ -16,7 +16,7 @@ export const userSlice = createSlice({
         },
         updateCarDriven: ( state, action ) => {
             state.car_driven = action.payload;
-            state.average_ice_range = CAR_DATA.find( (car) => action.payload === car.id ).average_range;
+            state.average_ice_range = CAR_DATA.find( (car) => action.payload === car.id ).average_range;   
         },
         updateDataEntered: ( state, action ) => {
             state.dataEntered = action.payload;

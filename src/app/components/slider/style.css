@@ -6,6 +6,7 @@ select.slider {
     background: white;
     border: 2px solid transparent;
     cursor: pointer;
+    transition: border 0.3s ease-in-out;
 }
 
 select.slider:hover,
