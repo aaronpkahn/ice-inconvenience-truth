@@ -9,7 +9,7 @@ import Header from './app/components/header';
 function App() {
 
   const currentSlide = useSelector( (state) => state.slides.currentSlide);
-  
+
   return (
     <div className="app">
       <Header />

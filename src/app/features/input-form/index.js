@@ -16,27 +16,21 @@ import './style.css';
 
 function InputForm() {
 
-    const selectCar = state => state.car;
-
-    const { carDriven } = useSelector( selectCar );
+    const carDriven = useSelector( state => state.car.carDriven );
 
     const dispatch = useDispatch();
     
     const updateMilesPerWeekday = ( event ) => {
-        dispatch( updateMilesDriven( event.target.value ));
-        store.dispatch( { type: `car/UPDATE_MILES_DRIVEN`, payload: event.target.value } );
+        store.dispatch( { type: `UPDATE_MILES_DRIVEN`, payload: event.target.value } );
     }
     
     const updateCarType = ( value ) => {
-        // dispatch( updateCarDriven( value ));
-
-        store.dispatch( { type: `car/UPDATE_CAR_TYPE`, payload: value } );
+        store.dispatch( { type: `UPDATE_CAR_TYPE`, payload: value } );
     }
 
     const updateDataEnteredCallback = () => {
         dispatch( goToSlide( 'convenience' ) );
     }
-
 
     return (
         <Card id="entryForm">

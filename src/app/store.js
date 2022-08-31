@@ -1,12 +1,18 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userReducer from './hooks/userSlice';
 import slideReducer from './hooks/slideSlice';
 import { carDataReducer } from './hooks/carData';
+import { graphDataReducer } from './hooks/graphDataReducer';
 
-export default configureStore({
-  reducer: {
-    inputs: userReducer,
-    slides: slideReducer,
-    car: carDataReducer,
-  },
+// const carInputReducer = combineReducers({
+//   car: carDataReducer,
+//   graph: graphDataReducer,
+// });
+
+const reducer = combineReducers({
+  inputs: userReducer,
+  slides: slideReducer,
+  car: carDataReducer,
 })
+
+export default configureStore({ reducer });

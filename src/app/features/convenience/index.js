@@ -15,7 +15,7 @@ function ConvenienceSlide( { } ) {
 
     const dispatch = useDispatch();
 
-    const { average_ice_range: iceRange, milesDriven: milesDriven } = useSelector( (state) => state.inputs );
+    const { averageIceRange: iceRange, milesDriven } = useSelector( (state) => state.car );
 
     let { evDates, iceDates } = graphService.calcState( milesDriven, iceRange );
 
