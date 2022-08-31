@@ -15,11 +15,12 @@ function ConvenienceSlide( { } ) {
 
     const dispatch = useDispatch();
 
-    const { averageIceRange: iceRange, milesDriven } = useSelector( (state) => state.car );
+    let { evDates, iceDates } = useSelector( (state) => state.car );
 
-    let { evDates, iceDates } = graphService.calcState( milesDriven, iceRange );
+    // console.log(evDates, iceDates );
+    // let { evDates, iceDates } = graphService.calcState( milesDriven, iceRange );
 
-    const dataMap = (i) => { return { y: i.minRange, x: i.date, ...i } };
+    const dataMap = (i) => { return { y: i.minRange, x: new Date(i.date), ...i } };
 
     evDates = evDates.slice(0,60).map( dataMap );
     iceDates = iceDates.slice(0,60).map( dataMap );

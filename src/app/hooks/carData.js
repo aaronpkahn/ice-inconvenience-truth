@@ -11,6 +11,8 @@ const initialState = {
     averageIceRange: DEFAULT_ICE_RANGE,
     isHybrid: false,
     dataEntered: false,
+    evDates: [],
+    iceDates: [],
 };
 
 export const carDataReducer = ( state = initialState, action ) => {
@@ -38,12 +40,7 @@ export const carDataReducer = ( state = initialState, action ) => {
         default:
     }
 
-    const graphUpdate = drivingTelemetryReducer( update, action );
-
-    update = {
-        ...graphUpdate,
-        ...update
-    };
+    // update  = drivingTelemetryReducer( update, action );
     
     return Object.assign({}, state, update );;
 }

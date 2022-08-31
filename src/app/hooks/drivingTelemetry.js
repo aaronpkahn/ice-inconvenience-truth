@@ -9,6 +9,7 @@ import {
 import { UPDATE_MILES_DRIVEN, UPDATE_CAR_TYPE, UPDATE_HYBRID } from './carData';
 
 export const drivingTelemetryReducer = ( state = {}, action ) => {
+    console.log(state);
     switch( action.type ) {
         case UPDATE_MILES_DRIVEN:
         case UPDATE_CAR_TYPE:
@@ -21,10 +22,11 @@ export const drivingTelemetryReducer = ( state = {}, action ) => {
  
             return { 
                 evDates, 
-                iceDates 
+                iceDates,
+                ...state
             }
         default:
-            return {};
+            return state;
     }
 }
 
