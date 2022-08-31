@@ -22,7 +22,6 @@ fieldset select {
 .car-select {
     padding: 1rem 2rem;
     background: none;
-    border: none;
     border-radius: .5rem;
     cursor: pointer;
     border: 2px solid transparent;
@@ -31,10 +30,7 @@ fieldset select {
     font-weight: 500;
 }
 
-.car-select:hover {
-    border-color: var(--blue);
-}
-
+.car-select:hover,
 .car-select.active {
     border-color: var(--blue);
 }

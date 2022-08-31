@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { updateMilesDriven, updateCarDriven } from '../../hooks/userSlice';
+// import { carDataReducer, UPDATE_CAR_TYPE, UPDATE_MILES_DRIVEN } from '../../hooks/carData';
+import store from '../../store';
+
 import { goToSlide } from '../../hooks/slideSlice';
 import { CAR_DATA } from '../../globals';
 
@@ -7,26 +10,33 @@ import Card from '../../components/card';
 import Slider from '../../components/slider/slider';
 import Button from '../../components/button';
 import CarDetails from './CarDetails';
+import { Checkbox } from '../../components/form';
 
 import './style.css';
 
 function InputForm() {
 
-    const carDriven = useSelector( (state) => state.inputs.car_driven );
+    const selectCar = state => state.car;
+
+    const { carDriven } = useSelector( selectCar );
 
     const dispatch = useDispatch();
     
     const updateMilesPerWeekday = ( event ) => {
         dispatch( updateMilesDriven( event.target.value ));
+        store.dispatch( { type: `car/UPDATE_MILES_DRIVEN`, payload: event.target.value } );
     }
     
     const updateCarType = ( value ) => {
-        dispatch( updateCarDriven( value ));
+        // dispatch( updateCarDriven( value ));
+
+        store.dispatch( { type: `car/UPDATE_CAR_TYPE`, payload: value } );
     }
 
     const updateDataEnteredCallback = () => {
         dispatch( goToSlide( 'convenience' ) );
     }
+
 
     return (
         <Card id="entryForm">
@@ -45,6 +55,11 @@ function InputForm() {
                 <fieldset>
                     <Slider options={[10,20,30,40,50]} onChange={updateMilesPerWeekday} />
                     <span>miles to work every day</span>
+                </fieldset>
+                <fieldset>
+                    <Checkbox>
+                        My car is a hybrid
+                    </Checkbox>
                 </fieldset>
             </section>
             <section className="input-group">

@@ -1,0 +1,27 @@
+div.checkbox-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+    cursor: pointer;
+}
+
+div.checkbox-input {
+    width: 2rem;
+    height: 2rem;
+    background: white;
+    border: 2px solid transparent !important;
+    border-radius: .5rem;
+    border-color: transparent !important;
+    border-bottom-color: transparent !important;
+    outline: none;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.3);
+    transition: border 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.checkbox-input svg {
+    fill: var(--blue);
+}
