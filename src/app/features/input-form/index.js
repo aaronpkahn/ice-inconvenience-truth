@@ -28,6 +28,10 @@ function InputForm() {
         store.dispatch( { type: `UPDATE_CAR_TYPE`, payload: value } );
     }
 
+    const updateHybrid = ( value ) => {
+        store.dispatch( { type: `UPDATE_HYBRID`, payload: value } );
+    }
+
     const updateDataEnteredCallback = () => {
         dispatch( goToSlide( 'convenience' ) );
     }
@@ -51,7 +55,7 @@ function InputForm() {
                     <span>miles to work every day</span>
                 </fieldset>
                 <fieldset>
-                    <Checkbox>
+                    <Checkbox onChange={updateHybrid}>
                         My car is a hybrid
                     </Checkbox>
                 </fieldset>

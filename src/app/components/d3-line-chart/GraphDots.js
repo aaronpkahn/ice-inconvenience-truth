@@ -38,9 +38,9 @@ function GraphDots( { xScale, yScale, data, opacity = 1 } ) {
     return( 
         <g ref={anchor}>
             { data.map( (d) => (
-                <g>
-                    <circle key={d.x} className="dot" cx={xScale(d.x)} cy={yScale(d.y)} r={6}></circle>
-                    <text key={d.x} className="popup" textAnchor="start" x={xScale(d.x) - 20} y={yScale(d.y) - 20}> ${d.minRange} </text>
+                <g key={`${d.x + d.y}`}>
+                    <circle className="dot" cx={xScale(d.x)} cy={yScale(d.y)} r={6}></circle>
+                    <text className="popup" textAnchor="start" x={xScale(d.x) - 20} y={yScale(d.y) - 20}> ${d.minRange} </text>
                 </g>
             ))}
         </g>

@@ -2,7 +2,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userReducer from './hooks/userSlice';
 import slideReducer from './hooks/slideSlice';
 import { carDataReducer } from './hooks/carData';
-import { graphDataReducer } from './hooks/graphDataReducer';
 
 // const carInputReducer = combineReducers({
 //   car: carDataReducer,

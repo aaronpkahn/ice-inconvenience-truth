@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import './style.css';
 
-function Checkbox( { onClick, children } ) {
+function Checkbox( { onChange, children } ) {
 
     const [ checked, setChecked ] = useState(false);
 
     const clickToggle = () => {
         setChecked( !checked );
         
-        'function' === typeof onClick && onClick();
+        'function' === typeof onChange && onChange( !checked  );
     }
 
     return (
