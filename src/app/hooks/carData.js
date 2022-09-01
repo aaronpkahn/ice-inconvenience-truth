@@ -1,46 +1,22 @@
-import { DEFAULT_MILES_PER_DAY_WEEKDAY, DEFAULT_ICE_RANGE, CAR_DATA } from '../globals';
 import { drivingTelemetryReducer } from './drivingTelemetry';
+import { carDetailsReducer } from './carDetails';
 
 export const UPDATE_MILES_DRIVEN = 'UPDATE_MILES_DRIVEN';
 export const UPDATE_CAR_TYPE = 'UPDATE_CAR_TYPE';
 export const UPDATE_HYBRID = 'UPDATE_HYBRID';
 
-const initialState = {
-    milesDriven: DEFAULT_MILES_PER_DAY_WEEKDAY,
-    carDriven: null,
-    averageIceRange: DEFAULT_ICE_RANGE,
-    isHybrid: false,
-    dataEntered: false,
-    evDates: [],
-    iceDates: [],
-};
+//  the reducers we will call in order to create the state shape for car
+const reducers = [ 
+    carDetailsReducer, 
+    drivingTelemetryReducer 
+];
 
-export const carDataReducer = ( state = initialState, action ) => {
-    let update;
-    switch( action.type ) {
-        case UPDATE_MILES_DRIVEN:
-            update = {
-                ...state,
-                milesDriven: Number(action.payload)
-            }
-            break;
-        case UPDATE_CAR_TYPE:
-            update = {
-                ...state,
-                carDriven: action.payload,
-                averageIceRange: Number( CAR_DATA.find( c => c.id === action.payload ).average_range )
-            }
-            break;
-        case UPDATE_HYBRID:
-            update = {
-                ...state,
-                isHybrid: action.payload
-            }
-            break;
-        default:
-    }
-
-    // update  = drivingTelemetryReducer( update, action );
-    
-    return Object.assign({}, state, update );;
+//  The current car state shape and the dispatched action
+//  will be passed to the reducer function, which will
+//  call each of the reducers in order, updating and returning the new
+//  state shape within each reducer
+export const carReducer = ( state = {}, action ) => {
+    return reducers.reduce( ( _state, _reducer ) => {
+        return _reducer( _state, action );
+    }, state);
 }

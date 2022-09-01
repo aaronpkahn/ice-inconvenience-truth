@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ConvenienceGraph from './ConvenienceGraph';
 import { Slide, SlideInner } from '../../components/slide';
 import { goToSlide } from '../../hooks/slideSlice';
-import * as graphService  from './service';
+import * as graphService  from '../../services/graphDataService';
 
 import './style.css';
 import Button from '../../components/button';
@@ -12,13 +12,9 @@ import { DataEntry, DataGroup, DataLabel, DataRow } from '../../components/datas
 function ConvenienceSlide( { } ) {
 
     const [slide, setSlide] = useState(1);
-
     const dispatch = useDispatch();
 
     let { evDates, iceDates } = useSelector( (state) => state.car );
-
-    // console.log(evDates, iceDates );
-    // let { evDates, iceDates } = graphService.calcState( milesDriven, iceRange );
 
     const dataMap = (i) => { return { y: i.minRange, x: new Date(i.date), ...i } };
 
