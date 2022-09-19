@@ -13,7 +13,7 @@ function Checkbox( { onChange, children } ) {
 
     return (
         <div className="checkbox-wrapper" onClick={clickToggle}>
-            <div className="checkbox-input">
+            <div className={`checkbox-input ${checked ? 'checked' : ''}`}>
                 { checked && ( 
                     <svg 
                         enableBackground="new 0 0 24 24" 

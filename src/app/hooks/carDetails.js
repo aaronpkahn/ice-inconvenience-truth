@@ -11,16 +11,7 @@ import {
     UPDATE_HYBRID
 } from './carData';
 
-const initialState = {
-    milesDriven: DEFAULT_MILES_PER_DAY_WEEKDAY,
-    carDriven: null,
-    averageIceRange: DEFAULT_ICE_RANGE,
-    isHybrid: false,
-    dataEntered: false,
-    mpg: DEFAULT_MPG,
-};
-
-export const carDetailsReducer = ( state = initialState, action ) => {
+export const carDetailsReducer = ( state = {}, action ) => {
     let car;
     switch( action.type ) {
         case UPDATE_MILES_DRIVEN:

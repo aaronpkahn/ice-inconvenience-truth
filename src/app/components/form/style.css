@@ -22,6 +22,11 @@ div.checkbox-input {
     justify-content: center;
 }
 
+div.checkbox-input:hover,
+div.checkbox-input.checked {
+    border-color: var(--blue) !important;
+}
+
 div.checkbox-input svg {
     fill: var(--blue);
 }

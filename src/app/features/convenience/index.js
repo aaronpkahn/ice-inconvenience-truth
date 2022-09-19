@@ -4,6 +4,7 @@ import ConvenienceGraph from './ConvenienceGraph';
 import { Slide, SlideInner } from '../../components/slide';
 import { goToSlide } from '../../hooks/slideSlice';
 import * as graphService  from '../../services/graphDataService';
+import * as telemetryService from '../../services/telemetryService';
 
 import './style.css';
 import Button from '../../components/button';
@@ -16,14 +17,27 @@ function ConvenienceSlide( { } ) {
 
     let { evDates, iceDates } = useSelector( (state) => state.car );
 
-    const dataMap = (i) => { return { y: i.minRange, x: new Date(i.date), ...i } };
+    // const costsMap = (i) => { return { y: i.minRange, x: new Date(i.date), ...i } };
 
-    evDates = evDates.slice(0,60).map( dataMap );
-    iceDates = iceDates.slice(0,60).map( dataMap );
+    evDates = evDates.slice(0,60);
+    iceDates = iceDates.slice(0,60);
 
-    const iceData   = graphService.getDataExtremes(iceDates);
-    const evData    = graphService.getDataExtremes(evDates);
-    const iceCosts  = graphService.getMaxPoints(iceDates, false);
+    // const iceData   = graphService.getDataExtremes(iceDates);
+    // const evData    = graphService.getDataExtremes(evDates);
+    // const iceCosts  = graphService.getMaxPoints(iceDates, false);
+
+    const evChargeTime = telemetryService.calculateRechargeTime( evDates, 20 );
+    const iceRefillTime = telemetryService.calculateRefillTime( iceDates, 10 );
+
+    const dataMap = (i) => { return { y: i.refillTime, x: new Date(i.date), ...i } };
+
+    const evData = evChargeTime.map( dataMap );
+    const iceData = iceRefillTime.map( dataMap );
+
+    console.log( evDates, evChargeTime);
+    console.log( iceDates, iceRefillTime );
+
+    const iceCosts  = graphService.getMaxPoints(iceData, false);
 
     const graphData = {
         iceData,

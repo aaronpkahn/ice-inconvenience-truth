@@ -12,7 +12,9 @@ export const getMaxPoints = ( arr ) => {
             current.y > arr[index-1].y &&
             current.y > arr[index+1].y
         ) ? [ ...prev, current ] : prev;
+        
     }, [] );
+
 }
 
 /**

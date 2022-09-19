@@ -15,22 +15,19 @@ import {
  * @param {Number} range 
  * @param {Number} refuelThreshold 
  */
-export const calcMinDistances = (distDays, scaleDenominator, range, refuelThreshold) => {
+export const calcMinDistances = ( { distDays, range, refuelThreshold, scaleDenominator } ) => {
     let date = new Date();
-    date.setDate(date.getDate() + 1);
     let values = [];
-
     let currentRange = range;
+    
+    date.setDate(date.getDate() + 1);
 
     for( let dist of distDays ) {
-        let scale = 10;
         currentRange -= dist;
-        scale = Math.max(0,Math.floor(10*currentRange/scaleDenominator));
 
-        values.push({ 
-            scale, 
+        values.push({
             dist, 
-            minRange: (Math.max(0,currentRange)), 
+            minRange: Math.max( 0, currentRange ), 
             date: new Date(date.getTime()).toDateString() 
         });
 
@@ -76,15 +73,25 @@ export const calcDistPerDay = (distPerDayWeekday) => {
  */
 export const calculateDailyDriving = (milesPerDayWeekday, iceRange = DEFAULT_ICE_RANGE, evRange = DEFAULT_EV_RANGE ) => {
 
-    const distDays    = calcDistPerDay(milesPerDayWeekday);
-    const evDates     = calcMinDistances(distDays, iceRange, evRange, DEFAULT_MIN_EV_RANGE);
-    const iceDates    = calcMinDistances(distDays, iceRange, iceRange, DEFAULT_MIN_ICE_RANGE);
-    
-    const  len = evDates.length;
+    const distDays = calcDistPerDay( milesPerDayWeekday );
+
+    const evDates = calcMinDistances({ 
+        distDays, 
+        range: evRange, 
+        refuelThreshold: DEFAULT_MIN_EV_RANGE 
+    });
+
+    const iceDates = calcMinDistances({ 
+        distDays, 
+        range: iceRange, 
+        refuelThreshold:  DEFAULT_MIN_ICE_RANGE 
+    });
+
+    const len = evDates.length;
     const reducer = (a,c) => a + c.minRange/len
 
-    const iceAvgMinRange = Math.floor(iceDates.reduce(reducer, 0));
-    const evAvgMinRange = Math.floor(evDates.reduce(reducer, 0));
+    const iceAvgMinRange    = Math.floor(iceDates.reduce(reducer, 0));
+    const evAvgMinRange     = Math.floor(evDates.reduce(reducer, 0));
     
     return {
         milesPerDayWeekday,
@@ -93,4 +100,52 @@ export const calculateDailyDriving = (milesPerDayWeekday, iceRange = DEFAULT_ICE
         evDates,
         iceDates,
     }
+}
+
+export const calculateRechargeTime = ( distDays, timeToRefill ) => {
+
+    let refillTime = 0;
+
+    const reducer = ( prev, current, index ) => {
+        if ( 
+            index > 0 &&
+            index < distDays.length - 1 && 
+            current.minRange < distDays[index-1].minRange &&
+            current.minRange < distDays[index+1].minRange
+        ) {
+            refillTime += timeToRefill;
+        } 
+
+        const data = {
+            refillTime,
+            ...current
+        }
+        return [ ...prev, data ];
+    };
+
+    return distDays.reduce( reducer, [] );
+}
+
+export const calculateRefillTime = ( distDays, timeToRefill ) => {
+
+    let refillTime = 0;
+
+    const reducer = ( prev, current, index ) => {
+        if ( 
+            index > 0 &&
+            index < distDays.length - 1 && 
+            current.minRange > distDays[index-1].minRange &&
+            current.minRange > distDays[index+1].minRange
+        ) {
+            refillTime += timeToRefill;
+        } 
+
+        const data = {
+            refillTime,
+            ...current
+        }
+        return [ ...prev, data ];
+    };
+
+    return distDays.reduce( reducer, [] );
 }

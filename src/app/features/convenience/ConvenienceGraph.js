@@ -14,8 +14,6 @@ const WIDTH = 700;
 
 function ConvenienceGraph( { iceData, evData, iceCosts, slide } ) {
 
-    console.log( iceData );
-    
     const yAxisFn = ( axis ) => {
         axis.ticks(6).tickValues();
     }
