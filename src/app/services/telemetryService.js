@@ -1,9 +1,10 @@
 import { 
-    DAYS, 
     DEFAULT_ICE_RANGE, 
     DEFAULT_EV_RANGE, 
+    DEFAULT_MILES_PER_DAY_WEEKEND,
     DEFAULT_MIN_ICE_RANGE,
     DEFAULT_MIN_EV_RANGE,
+    WEEKS,
 } from '../globals';
 
 /**
@@ -45,21 +46,66 @@ export const calcMinDistances = ( { distDays, range, refuelThreshold, scaleDenom
  * Calculate the number of miles driven daily 
  * based on commute and vacation averages
  * 
- * @param {Number} distPerDayWeekday 
+ * @param {Number} distPerDayWeekday
+ * @param {Number} distPerYear
  */
-export const calcDistPerDay = (distPerDayWeekday) => {
-    let length = DAYS;
+export const calcDistPerDay = (distPerDayWeekday, distPerYear) => {
+    /*
+    Algorigm
+    1. Drive distPerDayWeekday every weekday
+    2. Drive 10 miles every weekend day (DEFAULT_MILES_PER_DAY_WEEKEND)
+    3. Calculate remaining miles to get to distPerYear
+    4. Divide remaining miles into 1/3 210 and 2/3 410 mile travel days
+    5. Place remaining miles on a random weekend day that doesn't have much driving
+    */
+
+    let length = WEEKS*7;
     let days = new Array(length);
-    days.fill(distPerDayWeekday, 0, length);
-    
-    for(var week=0; week<52; week++){
-        if( week % 7 == 4 ){
-            days[week*7-2] = 400
+    let normalizedDistPerYear = Math.ceil(distPerYear * WEEKS/52)
+    for(let week=0; week<WEEKS; week++){
+        let fillindex=week*7
+        days.fill(distPerDayWeekday, fillindex, fillindex+5);
+        days.fill(DEFAULT_MILES_PER_DAY_WEEKEND, fillindex+5, fillindex+7);
+    }
+
+    let remaining = normalizedDistPerYear - distPerDayWeekday * WEEKS * 5 - DEFAULT_MILES_PER_DAY_WEEKEND * WEEKS * 2
+    if( remaining <= 0 ){
+        return days;
+    }
+
+    let two_hundreds = Math.floor(remaining/200)
+    let travel_400 = Math.floor(two_hundreds/3)
+    let travel_200 = two_hundreds - travel_400*2
+    remaining = remaining-travel_200*200-travel_400*400;
+
+    let travel_400_mod = Math.floor(WEEKS/travel_400)
+    let travel_200_mod = Math.floor(WEEKS/travel_200)
+
+    let travel_400_remaining = travel_400
+    let travel_200_remaining = travel_200
+    for(let week=0; week<WEEKS; week++){ //TODO: could do this by looping travel_400 and travel_200 times
+        if(travel_400_remaining > 0 && (WEEKS-week) % travel_400_mod == 1){ //we use 1 here to provide some offset
+            days[week*7+6] += 400
+            travel_400_remaining -= 1
         }
-        if( week % 4 == 2 ){
-            days[week*7-1] = 200
+        if(travel_200_remaining > 0 && (WEEKS-week) % travel_200_mod == 0){
+            days[week*7+5] += 200
+            travel_200_remaining -= 1
         }
     }
+
+    //place remaining miles
+    for(let week=WEEKS-1; week>=0; week--){
+        if(days[week*7+6] == DEFAULT_MILES_PER_DAY_WEEKEND){
+            days[week*7+6] += remaining;
+            break;
+        }
+        if(days[week*7+5] == DEFAULT_MILES_PER_DAY_WEEKEND){
+            days[week*7+5] += remaining;
+            break;
+        }
+    }
+
     return days
 }
 
@@ -67,13 +113,14 @@ export const calcDistPerDay = (distPerDayWeekday) => {
  * Calculate daily driving telemetry 
  * for both EV and ICE data
  * 
- * @param {Number} milesPerDayWeekday 
+ * @param {Number} milesPerDayWeekday
+ * @param {Number} milesPerYear
  * @param {Number} iceRange 
  * @param {Number} evRange 
  */
-export const calculateDailyDriving = (milesPerDayWeekday, iceRange = DEFAULT_ICE_RANGE, evRange = DEFAULT_EV_RANGE ) => {
+export const calculateDailyDriving = (milesPerDayWeekday, milesPerYear, iceRange = DEFAULT_ICE_RANGE, evRange = DEFAULT_EV_RANGE ) => {
 
-    const distDays = calcDistPerDay( milesPerDayWeekday );
+    const distDays = calcDistPerDay( milesPerDayWeekday, milesPerYear );
 
     const evDates = calcMinDistances({ 
         distDays, 
@@ -95,6 +142,7 @@ export const calculateDailyDriving = (milesPerDayWeekday, iceRange = DEFAULT_ICE
     
     return {
         milesPerDayWeekday,
+        milesPerYear,
         iceAvgMinRange,
         evAvgMinRange,
         evDates,

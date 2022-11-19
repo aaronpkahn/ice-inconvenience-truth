@@ -7,6 +7,7 @@ import {
 
 import {
     UPDATE_MILES_DRIVEN,
+    UPDATE_MILES_PER_YEAR,
     UPDATE_CAR_TYPE,
     UPDATE_HYBRID
 } from './carData';
@@ -18,6 +19,11 @@ export const carDetailsReducer = ( state = {}, action ) => {
             return {
                 ...state,
                 milesDriven: Number(action.payload)
+            }
+        case UPDATE_MILES_PER_YEAR:
+            return {
+                ...state,
+                milesDrivenPerYear: Number(action.payload)
             }
         case UPDATE_CAR_TYPE:
             car = CAR_DATA.find( c => c.id === action.payload );
