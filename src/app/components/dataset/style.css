@@ -1,0 +1,24 @@
+
+.data-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.data-group {
+
+}
+
+.data-entry {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: .2rem;
+    color: var(--dark-blue);
+}
+
+.data-label {
+    font-size: 1rem;
+}

@@ -1,0 +1,58 @@
+.input-group {
+    margin-bottom: 1rem;
+}
+
+path {
+    pointer-events: none;
+}
+
+fieldset {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+fieldset select {
+    font-size: 1.4rem;
+}
+
+.car-select {
+    padding: 1rem 2rem;
+    background: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    border: 2px solid transparent;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.3);
+    transition: border 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+.car-select:hover,
+.car-select.active {
+    border-color: var(--blue);
+}
+
+.car-details {
+    width: 100%;
+    padding-top: 1rem;
+    font-size: .9rem;
+}
+
+.info {
+    border-bottom: 1px dashed var(--blue);
+    font-weight: bold;
+    cursor: help;
+}
+
+.hover-details {
+    height: 1rem;
+    margin-top: .5rem;
+    font-size: .8rem;
+    color: #5f5f5f;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}

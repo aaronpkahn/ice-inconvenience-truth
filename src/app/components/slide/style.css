@@ -1,0 +1,15 @@
+.slide {
+    padding: 2rem 0;
+}
+
+.slide-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+}
+
+.slide-inner > * {
+    flex-basis: 50%;
+}

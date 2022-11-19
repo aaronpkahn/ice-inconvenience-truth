@@ -1,0 +1,15 @@
+select.slider {
+    border-radius: .5rem;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.3);
+    padding: .5rem 1rem;
+    outline: none;
+    background: white;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border 0.3s ease-in-out;
+}
+
+select.slider:hover,
+select.slider.changed {
+    border-color: var(--blue);
+}
