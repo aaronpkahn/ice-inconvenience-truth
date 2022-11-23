@@ -16,13 +16,15 @@ export const drivingTelemetryReducer = ( state = {}, action ) => {
 
             const { 
                 evDates, 
-                iceDates 
+                iceDates,
+                distDates
             } = telemetryService.calculateDailyDriving( state.milesDriven, state.milesDrivenPerYear, state.averageIceRange );
- 
+
             return { 
                 ...state,
                 evDates, 
-                iceDates
+                iceDates,
+                distDates
             }
             
         default:

@@ -13,6 +13,10 @@ import {
 } from './carData';
 
 export const carDetailsReducer = ( state = {}, action ) => {
+    
+    // if(!state.carDriven) {
+    //     state.carDriven = 'sedan';
+    // }
     let car;
     switch( action.type ) {
         case UPDATE_MILES_DRIVEN:

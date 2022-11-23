@@ -16,28 +16,23 @@ import {
  * @param {Number} range 
  * @param {Number} refuelThreshold 
  */
-export const calcMinDistances = ( { distDays, range, refuelThreshold, scaleDenominator } ) => {
-    let date = new Date();
+export const calcMinDistances = ( { distDates, range, refuelThreshold, scaleDenominator } ) => {
     let values = [];
     let currentRange = range;
-    
-    date.setDate(date.getDate() + 1);
 
-    for( let dist of distDays ) {
+    distDates.forEach(({dist, date}, i) => {
         currentRange -= dist;
 
         values.push({
             dist, 
             minRange: Math.max( 0, currentRange ), 
-            date: new Date(date.getTime()).toDateString() 
+            date: date
         });
 
         if (currentRange < refuelThreshold) {
             currentRange = range;
         }
-
-        date.setDate(date.getDate() + 1);
-    }
+    });
 
     return values;
 }
@@ -46,10 +41,11 @@ export const calcMinDistances = ( { distDays, range, refuelThreshold, scaleDenom
  * Calculate the number of miles driven daily 
  * based on commute and vacation averages
  * 
+ * @param {Number} weeks
  * @param {Number} distPerDayWeekday
  * @param {Number} distPerYear
  */
-export const calcDistPerDay = (distPerDayWeekday, distPerYear) => {
+export const calcDistPerDay = (weeks, distPerDayWeekday, distPerYear) => {
     /*
     Algorigm
     1. Drive distPerDayWeekday every weekday
@@ -59,16 +55,16 @@ export const calcDistPerDay = (distPerDayWeekday, distPerYear) => {
     5. Place remaining miles on a random weekend day that doesn't have much driving
     */
 
-    let length = WEEKS*7;
+    let length = weeks*7;
     let days = new Array(length);
-    let normalizedDistPerYear = Math.ceil(distPerYear * WEEKS/52)
-    for(let week=0; week<WEEKS; week++){
+    let normalizedDistPerYear = Math.ceil(distPerYear * weeks/52)
+    for(let week=0; week<weeks; week++){
         let fillindex=week*7
         days.fill(distPerDayWeekday, fillindex, fillindex+5);
         days.fill(DEFAULT_MILES_PER_DAY_WEEKEND, fillindex+5, fillindex+7);
     }
 
-    let remaining = normalizedDistPerYear - distPerDayWeekday * WEEKS * 5 - DEFAULT_MILES_PER_DAY_WEEKEND * WEEKS * 2
+    let remaining = normalizedDistPerYear - distPerDayWeekday * weeks * 5 - DEFAULT_MILES_PER_DAY_WEEKEND * weeks * 2
     if( remaining <= 0 ){
         return days;
     }
@@ -78,24 +74,24 @@ export const calcDistPerDay = (distPerDayWeekday, distPerYear) => {
     let travel_200 = two_hundreds - travel_400*2
     remaining = remaining-travel_200*200-travel_400*400;
 
-    let travel_400_mod = Math.floor(WEEKS/travel_400)
-    let travel_200_mod = Math.floor(WEEKS/travel_200)
+    let travel_400_mod = Math.floor(weeks/travel_400)
+    let travel_200_mod = Math.floor(weeks/travel_200)
 
     let travel_400_remaining = travel_400
     let travel_200_remaining = travel_200
-    for(let week=0; week<WEEKS; week++){ //TODO: could do this by looping travel_400 and travel_200 times
-        if(travel_400_remaining > 0 && (WEEKS-week) % travel_400_mod == 1){ //we use 1 here to provide some offset
+    for(let week=0; week<weeks; week++){ //TODO: could do this by looping travel_400 and travel_200 times
+        if(travel_400_remaining > 0 && (weeks-week) % travel_400_mod == 1){ //we use 1 here to provide some offset
             days[week*7+6] += 400
             travel_400_remaining -= 1
         }
-        if(travel_200_remaining > 0 && (WEEKS-week) % travel_200_mod == 0){
+        if(travel_200_remaining > 0 && (weeks-week) % travel_200_mod == 0){
             days[week*7+5] += 200
             travel_200_remaining -= 1
         }
     }
 
     //place remaining miles
-    for(let week=WEEKS-1; week>=0; week--){
+    for(let week=weeks-1; week>=0; week--){
         if(days[week*7+6] == DEFAULT_MILES_PER_DAY_WEEKEND){
             days[week*7+6] += remaining;
             break;
@@ -110,6 +106,26 @@ export const calcDistPerDay = (distPerDayWeekday, distPerYear) => {
 }
 
 /**
+ * Calculate dates for the coming weeks starting on next monday
+ * 
+ * @param {Date} startDate
+ * @param {Number} weeks
+ */
+ export const calculateDates = (startDate, weeks) => {
+    let dates = [];
+    let date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+
+    // Start on the next monday
+    date.setDate(date.getDate() + (7 - date.getDay()) % 7);
+    for(let i=0; i<weeks*7; i++){
+        date.setDate(date.getDate()+1);
+        dates.push(new Date(date.getTime()));
+    }
+
+    return dates;
+}
+
+/**
  * Calculate daily driving telemetry 
  * for both EV and ICE data
  * 
@@ -120,16 +136,24 @@ export const calcDistPerDay = (distPerDayWeekday, distPerYear) => {
  */
 export const calculateDailyDriving = (milesPerDayWeekday, milesPerYear, iceRange = DEFAULT_ICE_RANGE, evRange = DEFAULT_EV_RANGE ) => {
 
-    const distDays = calcDistPerDay( milesPerDayWeekday, milesPerYear );
+    const dists = calcDistPerDay( WEEKS, milesPerDayWeekday, milesPerYear );
+    const dates = calculateDates( new Date(), WEEKS );
+
+    const distDates = dists.map((dist, i) => {
+        return { 
+            dist,
+            date: dates[i].toDateString() //TODO: ugh, do we really have to use a string for serialization reasons?
+        };
+    });
 
     const evDates = calcMinDistances({ 
-        distDays, 
+        distDates,
         range: evRange, 
         refuelThreshold: DEFAULT_MIN_EV_RANGE 
     });
 
     const iceDates = calcMinDistances({ 
-        distDays, 
+        distDates, 
         range: iceRange, 
         refuelThreshold:  DEFAULT_MIN_ICE_RANGE 
     });
@@ -147,6 +171,7 @@ export const calculateDailyDriving = (milesPerDayWeekday, milesPerYear, iceRange
         evAvgMinRange,
         evDates,
         iceDates,
+        distDates,
     }
 }
 

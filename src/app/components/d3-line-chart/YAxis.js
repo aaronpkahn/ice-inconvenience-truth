@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-function YAxis( { yScale, margins, yAxisFn }) {
+function YAxis( { yScale, margins, yAxisFn}) {
 
     const anchor = useRef(null);
     
