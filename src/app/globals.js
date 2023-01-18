@@ -1,10 +1,12 @@
 export const START_DATE = '2017-12-31';
 export const END_DATE = '2018-12-30';
-export const DAYS = 60;
+export const WEEKS = 8;
 export const DEFAULT_MPG = 30;
 export const DEFAULT_ICE_RANGE = 410;
 export const DEFAULT_EV_RANGE = 300;
 export const DEFAULT_MILES_PER_DAY_WEEKDAY = 30;
+export const DEFAULT_MILES_PER_DAY_WEEKEND = 10;
+export const DEFAULT_MILES_PER_YEAR = 10000;
 export const DEFAULT_MIN_ICE_RANGE = 35;
 export const DEFAULT_MIN_EV_RANGE = 300;
 

@@ -8,6 +8,7 @@ function CarDetails() {
 
     const { 
         milesDriven,
+        milesDrivenPerYear,
         car_driven: carDriven,
     } = useSelector( (state) => state.inputs );
 
@@ -28,9 +29,9 @@ function CarDetails() {
                         </span>
                         <span> driving </span>
                         <span className="info">
-                            {`${milesDriven} miles `}
+                            {`${milesDriven} miles per weekday`}
+                            {`${milesDrivenPerYear} miles per year`}
                         </span>
-                        <span> per day</span>
                     </div>
                 </>
             )}

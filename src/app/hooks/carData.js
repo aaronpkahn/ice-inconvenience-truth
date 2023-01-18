@@ -2,12 +2,14 @@ import { drivingTelemetryReducer } from './drivingTelemetry';
 import { carDetailsReducer } from './carDetails';
 import { 
     DEFAULT_MILES_PER_DAY_WEEKDAY,
+    DEFAULT_MILES_PER_YEAR,
     DEFAULT_ICE_RANGE,
     CAR_DATA,
     DEFAULT_MPG 
 } from '../globals';
 
 export const UPDATE_MILES_DRIVEN = 'UPDATE_MILES_DRIVEN';
+export const UPDATE_MILES_PER_YEAR = 'UPDATE_MILES_PER_YEAR';
 export const UPDATE_CAR_TYPE = 'UPDATE_CAR_TYPE';
 export const UPDATE_HYBRID = 'UPDATE_HYBRID';
 
@@ -19,6 +21,7 @@ const reducers = [
 
 const initialState = {
     milesDriven: DEFAULT_MILES_PER_DAY_WEEKDAY,
+    milesDrivenPerYear: DEFAULT_MILES_PER_YEAR,
     carDriven: null,
     averageIceRange: DEFAULT_ICE_RANGE,
     isHybrid: false,

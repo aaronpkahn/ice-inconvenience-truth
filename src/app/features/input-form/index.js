@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { updateMilesDriven, updateCarDriven } from '../../hooks/userSlice';
+// import { updateMilesDriven, updateCarDriven } from '../../hooks/userSlice';
 // import { carDataReducer, UPDATE_CAR_TYPE, UPDATE_MILES_DRIVEN } from '../../hooks/carData';
 import store from '../../store';
 
@@ -19,11 +19,15 @@ function InputForm() {
     const carDriven = useSelector( state => state.car.carDriven );
 
     const dispatch = useDispatch();
-    
+
     const updateMilesPerWeekday = ( event ) => {
         store.dispatch( { type: `UPDATE_MILES_DRIVEN`, payload: event.target.value } );
     }
-    
+
+    const updateMilesPerYear = ( event ) => {
+        store.dispatch( { type: `UPDATE_MILES_PER_YEAR`, payload: event.target.value } );
+    }
+
     const updateCarType = ( value ) => {
         store.dispatch( { type: `UPDATE_CAR_TYPE`, payload: value } );
     }
@@ -48,12 +52,15 @@ function InputForm() {
                                 {type.label}
                             </button>
                         )
-                    })}   
+                    })}
                 </fieldset>
                 <fieldset>
-                    <Slider options={[10,20,30,40,50]} onChange={updateMilesPerWeekday} />
-                    <span>miles to work every day</span>
+                    <Slider options={[10,20,30,40,50]} onChange={updateMilesPerWeekday} defaultValue={20} />
+                    <span>miles per weekday</span>
+                    <Slider options={[6000,8000,10000,12000,14000]} onChange={updateMilesPerYear} defaultValue={10000} />
+                    <span>miles per year</span>
                 </fieldset>
+
                 <fieldset>
                     <Checkbox onChange={updateHybrid}>
                         My car is a hybrid
@@ -61,7 +68,7 @@ function InputForm() {
                 </fieldset>
             </section>
             <section className="input-group">
-                <Button onClick={updateDataEnteredCallback}>Run Inconvenience Report</Button>
+                <Button onClick={updateDataEnteredCallback}>Run Inconvenience Report</Button> 
             </section>
             <section className="input-group">
                 <CarDetails />

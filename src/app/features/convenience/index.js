@@ -15,16 +15,11 @@ function ConvenienceSlide( { } ) {
     const [slide, setSlide] = useState(1);
     const dispatch = useDispatch();
 
-    let { evDates, iceDates } = useSelector( (state) => state.car );
+    let { evDates, iceDates, distDates } = useSelector( (state) => state.car );
 
-    // const costsMap = (i) => { return { y: i.minRange, x: new Date(i.date), ...i } };
-
-    evDates = evDates.slice(0,60);
-    iceDates = iceDates.slice(0,60);
-
-    // const iceData   = graphService.getDataExtremes(iceDates);
-    // const evData    = graphService.getDataExtremes(evDates);
-    // const iceCosts  = graphService.getMaxPoints(iceDates, false);
+    evDates = evDates.slice(0,56);
+    iceDates = iceDates.slice(0,56);
+    distDates = distDates.slice(0,56);
 
     const evChargeTime = telemetryService.calculateRechargeTime( evDates, 20 );
     const iceRefillTime = telemetryService.calculateRefillTime( iceDates, 10 );
@@ -33,9 +28,12 @@ function ConvenienceSlide( { } ) {
 
     const evData = evChargeTime.map( dataMap );
     const iceData = iceRefillTime.map( dataMap );
-
-    console.log( evDates, evChargeTime);
-    console.log( iceDates, iceRefillTime );
+    const distData = distDates.map((i) => {
+        return {
+            y: i.dist,
+            x: new Date(i.date)
+        }
+    });
 
     const iceCosts  = graphService.getMaxPoints(iceData, false);
 
@@ -43,6 +41,7 @@ function ConvenienceSlide( { } ) {
         iceData,
         evData,
         iceCosts,
+        distData,
         slide
     };
 
